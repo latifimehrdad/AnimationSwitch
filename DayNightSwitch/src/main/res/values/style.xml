@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="DayNightSwitch">
+        <attr name="meriIsDayChecked" format="boolean"/>
+        <attr name="meriSliderColor" format="color"/>
+        <attr name="meriSliderDayIcon" format="reference"/>
+        <attr name="meriSliderNightIcon" format="reference"/>
+        <attr name="meriSliderPadding" format="dimension"/>
+        <attr name="meriDayImage" format="reference"/>
+        <attr name="meriNightImage" format="reference"/>
+        <attr name="meriSlideDuration" format="integer"/>
+    </declare-styleable>
+
+
+
+
+</resources>

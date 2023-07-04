@@ -52,7 +52,7 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
     private lateinit var sliderBg: GradientDrawable
     private var listener: OnSwitchListener? = null
 
-    
+
     init {
         initViews(context)
         loadStyleAttrs(context, attrs)
@@ -81,13 +81,13 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
     private fun loadStyleAttrs(context: Context, attrs: AttributeSet?) {
         val styleAttrs = context.obtainStyledAttributes(attrs, R.styleable.DayNightSwitch, 0, 0)
         dayDrawable = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriDayImage)
-            ?: resources.getDrawable(R.drawable.ic_day_back)
+            ?: resources.getDrawable(R.drawable.day_back)
         nightDrawable = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriNightImage)
-            ?: resources.getDrawable(R.drawable.ic_night_back)
-        dayIcon = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriSliderDayIcon) ?:
-                resources.getDrawable(R.drawable.ic_sun)
-        nightIcon = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriSliderNightIcon) ?:
-                resources.getDrawable(R.drawable.ic_moon)
+            ?: resources.getDrawable(R.drawable.night_back)
+        dayIcon = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriSliderDayIcon)
+            ?: resources.getDrawable(R.drawable.ic_sun)
+        nightIcon = styleAttrs.getDrawable(R.styleable.DayNightSwitch_meriSliderNightIcon)
+            ?: resources.getDrawable(R.drawable.ic_moon)
         sliderMargin =
             styleAttrs.getDimension(R.styleable.DayNightSwitch_meriSliderPadding, dpToPx()).toInt()
         sliderColor = styleAttrs.getColor(R.styleable.DayNightSwitch_meriSliderColor, Color.WHITE)
@@ -139,28 +139,30 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
         lp.height = lp.width
         slider.layoutParams = lp
         sliderContainer.setPadding(sliderMargin)
-        val theme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != 32
+        val theme =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != 32
         setDayChecked(isDayChecked = theme, animated = true)
     }
 
     override fun onClick(v: View?) {
         isDayChecked = !isDayChecked
-        switchSliderWithAnimation(true)
+        switchSliderWithAnimation(animated = true, callListener = true)
     }
 
-    private fun switchSliderWithAnimation(animated: Boolean) {
+    private fun switchSliderWithAnimation(animated: Boolean, callListener: Boolean) {
         val animationDuration = if (animated) duration else 0L
         if (isDayChecked) {
             slider.animate().translationX(0f).rotation(0f).setDuration(animationDuration).start()
             CoroutineScope(IO).launch {
                 delay(animationDuration / 2)
-                withContext(Main){
+                withContext(Main) {
                     slider.setImageDrawable(dayIcon)
                 }
             }
 
             nightBg.animate().alpha(0f).setDuration(animationDuration).start()
-            listener?.onSwitch(true)
+            if (callListener)
+                listener?.onSwitch(true)
         } else {
             slider.animate().translationX(sliderDeltaX.toFloat()).rotation(360f)
                 .setDuration(animationDuration).start()
@@ -172,7 +174,8 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
                 }
             }
             nightBg.animate().alpha(1f).setDuration(animationDuration).start()
-            listener?.onSwitch(false)
+            if (callListener)
+                listener?.onSwitch(false)
         }
     }
 
@@ -180,6 +183,6 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
 
     fun setDayChecked(isDayChecked: Boolean, animated: Boolean = false) {
         this.isDayChecked = isDayChecked
-        switchSliderWithAnimation(animated)
+        switchSliderWithAnimation(animated = animated, callListener = false)
     }
 }

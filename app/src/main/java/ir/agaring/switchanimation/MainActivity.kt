@@ -4,63 +4,32 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
-import ir.agaring.animationswitch.DayNightSwitch
+import ir.agaring.animationswitch.AnimationSwitch
+import ir.agaring.animationswitch.EnumSwitchPosition
 
 class MainActivity : AppCompatActivity() {
-
-    var day = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dayNightSwitch = findViewById<DayNightSwitch>(R.id.dayNightSwitch)
+        val animationSwitch = findViewById<AnimationSwitch>(R.id.dayNightSwitch)
 
         val theme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == 32
+        if (theme)
+            animationSwitch.setPosition(position = EnumSwitchPosition.RIGHT, isAnimated = false)
+        else
+            animationSwitch.setPosition(position = EnumSwitchPosition.LEFT, isAnimated = false)
 
-        dayNightSwitch.setDayChecked(isDayChecked = theme, isAnimated = false)
-
-        dayNightSwitch.setOnSwitchListener {
-            if (!dayNightSwitch.isDayChecked())
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_YES)
-            else
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_NO)
-        }
-
-        val switchIO = findViewById<SwitchCompat>(R.id.switchIO)
-        switchIO.isChecked = theme
-
-/*        switchIO.setOnClickListener {
-            if (switchIO.isChecked)
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_YES)
-            else
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_NO)
-        }*/
-
-/*        val layout1 = findViewById<ConstraintLayout>(R.id.layout1)
-        layout1.setOnClickListener {
-            if (dayNightSwitch.isDayChecked())
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_YES)
-            else
-                changeApplicationTheme(Configuration.UI_MODE_NIGHT_NO)
-        }*/
-
-
-    }
-
-
-    //______________________________________________________________________________________________ changeApplicationTheme
-    fun changeApplicationTheme(theme: Int) {
-        when (theme) {
-            Configuration.UI_MODE_NIGHT_YES -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-            Configuration.UI_MODE_NIGHT_NO -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        animationSwitch.setOnSwitchListener {
+            when(animationSwitch.currentPosition()) {
+                EnumSwitchPosition.RIGHT ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                EnumSwitchPosition.LEFT ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
+
     }
-    //______________________________________________________________________________________________ changeApplicationTheme
 
 }

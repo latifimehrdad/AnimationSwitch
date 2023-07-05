@@ -10,7 +10,7 @@
     android:background="@color/white">
 
 
-    <ir.agaring.animationswitch.DayNightSwitch
+    <ir.agaring.animationswitch.AnimationSwitch
         android:id="@+id/dayNightSwitch"
         android:layout_width="100dp"
         android:layout_height="40dp"
@@ -18,8 +18,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:meriSlideDuration="500"
-        app:meriSliderPadding="5dp"/>
+        app:meriSwitchSliderPadding="7dp"
+        />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchIO"

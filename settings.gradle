@@ -12,6 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Switch Day Night"
+rootProject.name = "Animation Switch"
 include ':app'
-include ':DayNightSwitch'
+include ':AnimationSwitch'

@@ -6,10 +6,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/white">
 
 
-    <ir.agaring.daynightswitch.DayNightSwitch
+    <ir.agaring.animationswitch.DayNightSwitch
         android:id="@+id/dayNightSwitch"
         android:layout_width="100dp"
         android:layout_height="40dp"
@@ -19,5 +20,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:meriSlideDuration="500"
         app:meriSliderPadding="5dp"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchIO"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

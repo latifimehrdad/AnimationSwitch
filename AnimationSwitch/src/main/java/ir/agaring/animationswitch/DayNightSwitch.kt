@@ -1,4 +1,4 @@
-package ir.agaring.daynightswitch
+package ir.agaring.animationswitch
 
 import android.content.Context
 import android.content.res.Configuration
@@ -16,6 +16,7 @@ import androidx.core.view.setPadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,6 +35,7 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
     private lateinit var dayBg: ImageView
     private lateinit var nightBg: ImageView
     private lateinit var sliderContainer: FrameLayout
+    private var job: Job? = null
 
     private var isDayChecked = false
     private var duration = 300L
@@ -53,30 +55,44 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
     private var listener: OnSwitchListener? = null
 
 
+    //---------------------------------------------------------------------------------------------- init
     init {
         initViews(context)
         loadStyleAttrs(context, attrs)
     }
+    //---------------------------------------------------------------------------------------------- init
 
-    fun setOnSwitchListener(listener: (Boolean) -> Unit) {
-        this.listener = object : OnSwitchListener {
-            override fun onSwitch(isDayChecked: Boolean) {
-                listener(isDayChecked)
-            }
-        }
-    }
 
+
+    //---------------------------------------------------------------------------------------------- initViews
     private fun initViews(context: Context) {
         val rootView = LayoutInflater.from(context).inflate(R.layout.day_night_switch, this, false)
         addView(rootView)
-
         sliderContainer = findViewById(R.id.day_night_switch_slider_container)
         slider = findViewById(R.id.day_night_switch_slider)
         dayBg = findViewById(R.id.day_night_switch_day_bg)
         nightBg = findViewById(R.id.day_night_switch_night_bg)
-
         rootView.setOnClickListener(this)
     }
+    //---------------------------------------------------------------------------------------------- initViews
+
+
+
+    fun setOnSwitchListener(listener: (Boolean) -> Unit) {
+        this.listener = object : OnSwitchListener {
+            override fun onSwitch(isDayChecked: Boolean) {
+                job?.cancel()
+                job = CoroutineScope(IO).launch {
+                    delay(duration)
+                    withContext(Main) {
+                        listener(isDayChecked)
+                    }
+                }
+            }
+        }
+    }
+
+
 
     private fun loadStyleAttrs(context: Context, attrs: AttributeSet?) {
         val styleAttrs = context.obtainStyledAttributes(attrs, R.styleable.DayNightSwitch, 0, 0)
@@ -141,16 +157,16 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
         sliderContainer.setPadding(sliderMargin)
         val theme =
             context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != 32
-        setDayChecked(isDayChecked = theme, animated = true)
+        setDayChecked(isDayChecked = theme, isAnimated = false)
     }
 
     override fun onClick(v: View?) {
         isDayChecked = !isDayChecked
-        switchSliderWithAnimation(animated = true, callListener = true)
+        switchSliderWithAnimation(isAnimated = true, callListener = true)
     }
 
-    private fun switchSliderWithAnimation(animated: Boolean, callListener: Boolean) {
-        val animationDuration = if (animated) duration else 0L
+    private fun switchSliderWithAnimation(isAnimated: Boolean, callListener: Boolean) {
+        val animationDuration = if (isAnimated) duration else 0L
         if (isDayChecked) {
             slider.animate().translationX(0f).rotation(0f).setDuration(animationDuration).start()
             CoroutineScope(IO).launch {
@@ -181,8 +197,8 @@ class DayNightSwitch(context: Context, attrs: AttributeSet?, style: Int) :
 
     fun isDayChecked() = this.isDayChecked
 
-    fun setDayChecked(isDayChecked: Boolean, animated: Boolean = false) {
+    fun setDayChecked(isDayChecked: Boolean, isAnimated: Boolean = false) {
         this.isDayChecked = isDayChecked
-        switchSliderWithAnimation(animated = animated, callListener = false)
+        switchSliderWithAnimation(isAnimated = isAnimated, callListener = false)
     }
 }

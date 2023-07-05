@@ -3,5 +3,14 @@
     <style name="Base.Theme.SwitchDayNight" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">#2196F3</item>
+        <item name="colorPrimaryVariant">#FF9800</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#2196F3</item>
+        <item name="colorSecondaryVariant">#FF9800</item>
+        <item name="colorOnSecondary">@color/black</item>
+
     </style>
 </resources>

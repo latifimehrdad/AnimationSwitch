@@ -1,4 +1,4 @@
-package ir.agaring.daynightswitch
+package ir.agaring.animationswitch
 
 import org.junit.Test
 

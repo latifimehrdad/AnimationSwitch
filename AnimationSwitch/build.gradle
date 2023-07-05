@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'ir.agaring.daynightswitch'
+    namespace 'ir.agaring.animationswitch'
     compileSdk 33
 
     defaultConfig {
